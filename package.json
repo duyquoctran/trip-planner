@@ -8,6 +8,7 @@
     "setup-supabase": "node ./scripts/setup-supabase.js"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "dotenv": "^16.3.1",
     "pg": "^8.11.2"
   }
