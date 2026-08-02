@@ -1,26 +1,31 @@
-# Minimal Dockerfile for trip-planner
-# Builds the Node.js app and produces a production image suitable for scanning.
+# Multi-stage production Dockerfile for trip-planner
+# Builder stage: install deps and run build
+# Runtime stage: copy built artifacts and run the app
 
-FROM node:20-alpine
-
-# Create app directory
+# -------- BUILDER --------
+FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Install dependencies (prefer package-lock if present)
+# Install build dependencies
 COPY package.json package-lock.json* ./
+RUN npm ci || npm install
 
-# Use npm ci for reproducible installs when lockfile exists. Fall back to npm install if it fails.
-RUN npm ci --omit=dev || npm install --production
-
-# Copy application source
+# Copy source and run build (build script may only generate config.js)
 COPY . .
-
-# Run build script if present; ignore failure so Docker build doesn't fail for repos without a build step
 RUN npm run build || true
 
-# Set environment
+# -------- RUNTIME --------
+FROM node:20-alpine AS runtime
+WORKDIR /app
 ENV NODE_ENV=production
 
-# Image is only used for scanning in CI; no long-running process is required by default.
-# Default command prints Node version (Trivy doesn't need the container to run).
-CMD ["node", "--version"]
+# Copy package files and install only production deps
+COPY package.json package-lock.json* ./
+RUN npm ci --omit=dev || npm install --production || true
+
+# Copy app files from builder
+COPY --from=builder /app .
+
+# Default start behavior: try common entrypoints, otherwise print node version.
+# Replace or update CMD with your actual start command when available (e.g., "node ./dist/index.js" or "npm start").
+CMD ["sh", "-c", "if [ -f ./dist/index.js ]; then exec node ./dist/index.js; elif [ -f ./index.js ]; then exec node ./index.js; elif [ -f ./app.js ]; then exec node ./app.js; else exec node --version; fi"]
