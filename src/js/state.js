@@ -1,5 +1,14 @@
+export function getInitialLang(storage = globalThis.localStorage) {
+  try {
+    if (!storage) return 'en';
+    return storage.getItem('voyage_planner_lang') || 'en';
+  } catch (err) {
+    return 'en';
+  }
+}
+
 export const state = {
-  lang: localStorage.getItem('voyage_planner_lang') || 'en',
+  lang: getInitialLang(),
   trips: [],
   recordCount: 0,
   currentTrip: null,
@@ -14,6 +23,12 @@ export const state = {
 };
 
 const dom = {};
-export function $(id) { if (!dom[id]) dom[id] = document.getElementById(id); return dom[id]; }
+export function $(id) {
+  if (typeof document === 'undefined') {
+    return null;
+  }
+  if (!dom[id] || !dom[id].isConnected) dom[id] = document.getElementById(id);
+  return dom[id];
+}
 
 export default state;

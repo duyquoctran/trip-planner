@@ -7,8 +7,10 @@ export const I18N = { /* minimal: original I18N is large; bootstrap will import 
 
 // For now, export a t() that expects an I18N object to be attached to window.__voyageI18N if present.
 export function t(k) {
-  const dict = (window.__voyageI18N && window.__voyageI18N[state.lang]) || (window.__voyageI18N && window.__voyageI18N['en']) || {};
-  return dict[k] || k;
+  const source = typeof window !== 'undefined' ? window.__voyageI18N : null;
+  const dict = (source && source[state.lang]) || {};
+  const fallback = (source && source.en) || {};
+  return dict[k] || fallback[k] || k;
 }
 
 export default { I18N, t };
