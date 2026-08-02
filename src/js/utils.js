@@ -4,13 +4,16 @@ export function safeParse(s, fb) {
 export function genId() { return 'item_' + Date.now() + '_' + Math.floor(Math.random() * 1e6); }
 export function esc(s) { return String(s).replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
-export const GRADIENTS = ['linear-gradient(135deg,#fbcfe8 0%,#ccfbf1 100%)', 'linear-gradient(135deg,#fef3c7 0%,#fbcfe8 100%)', 'linear-gradient(135deg,#ccfbf1 0%,#fdba74 100%)', 'linear-gradient(135deg,#e0f2fe 0%,#fbcfe8 100%)'];
+export const GRADIENTS = ['linear-gradient(135deg,#fbcfe8 0%,#ccfbf1 100%)', 'linear-gradient(135deg,#fef3c7 0%,#fbcfe8 100%)', 'linear-gradient(135deg,#ccfbf1 0%,#fdba74 100%)', 'linear-gradient(135deg,#e0f2...)'];
 
 export function fmtCurrency(v, cur) {
-  const n = parseFloat(String(v).replace(/[^
-\d.-]/g, ''));
+  const n = parseFloat(String(v).replace(/[^\d.-]/g, ''));
   if (isNaN(n)) return '—';
-  try { return new Intl.NumberFormat('en-US', { style: 'currency', currency: cur }).format(n); } catch (e) { return n.toLocaleString() + ' ' + cur; }
+  try {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: cur }).format(n);
+  } catch (e) {
+    return n.toLocaleString() + ' ' + cur;
+  }
 }
 export function fmtDate(s) { if (!s) return ''; try { const d = new Date(s); if (isNaN(d)) return s; return d.toLocaleDateString(); } catch (e) { return s; } }
 export function fmtTripDates(s) { if (!s) return 'No dates'; const p = s.split(' – '); return p.length === 2 ? fmtDate(p[0]) + ' – ' + fmtDate(p[1]) : fmtDate(s); }
