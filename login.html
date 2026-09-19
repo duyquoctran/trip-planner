@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Sign in — Trip Planner</title>
+    <link rel="stylesheet" href="/src/css/styles.css">
+    <style>
+      .login-wrap { min-height: 100vh; display:flex; align-items:center; justify-content:center; padding:2rem; }
+      .login-card { width:100%; max-width:420px; background: #fff; border-radius:12px; box-shadow:0 6px 24px rgba(0,0,0,0.08); padding:24px; }
+      .login-title { font-size:1.25rem; margin-bottom:8px; }
+      .login-desc { color:#666; font-size:0.95rem; margin-bottom:16px; }
+      .form-field { margin-bottom:12px; }
+      .form-field input { width:100%; padding:10px 12px; border:1px solid #ddd; border-radius:8px; }
+      .btn { display:inline-block; padding:10px 14px; background:#1f7aec; color:#fff; border-radius:8px; border:none; cursor:pointer; }
+      .muted { color:#666; font-size:0.9rem; }
+    </style>
+  </head>
+  <body>
+    <div class="login-wrap">
+      <div class="login-card">
+        <div class="login-title">Sign in to Trip Planner</div>
+        <div class="login-desc">Enter your email and we'll send a magic link to sign you in.</div>
+        <form id="login-form">
+          <div class="form-field">
+            <label for="email" class="muted">Email address</label>
+            <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required />
+          </div>
+          <div style="margin-top:12px;">
+            <button id="login-submit" class="btn" type="submit">Continue</button>
+          </div>
+          <p id="login-message" style="margin-top:12px;color:#333;font-size:0.95rem"></p>
+        </form>
+        <p style="margin-top:18px" class="muted">Don't have an account? Use the same email — a magic link will create or sign you in.</p>
+      </div>
+    </div>
+
+    <script src="./config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="/src/js/auth.js"></script>
+    <script src="/src/js/login.js"></script>
+  </body>
+</html>
