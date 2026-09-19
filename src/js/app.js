@@ -360,8 +360,17 @@ const err=$('trip-name-error');if(err){err.textContent='';err.classList.add('hid
 $('modal-title').textContent=title;
 $('trip-name-input').value=name||'';
 let start='',end='';
-if(dates){const parts=dates.split(/ – | - |,/);start=(parts[0]||'').trim();end=(parts[1]||'').trim();
-[ start,end ]=[start,end].map(s=>{if(s&&!/^\d{4}-\d{2}-\d{2}$/.test(s)){const d=new Date(s);return isNaN(d)?'':d.toISOString().split('T')[0];}return s;});}
+if(dates){
+  const value=String(dates).trim();
+  const rangeMatch=value.match(/^(\d{4}-\d{2}-\d{2})\s*(?:[–-]|to)\s*(\d{4}-\d{2}-\d{2})$/i);
+  if(rangeMatch){start=rangeMatch[1];end=rangeMatch[2];}
+  else if(/^\d{4}-\d{2}-\d{2}$/.test(value)){start=value;}
+  else {
+    const parts=value.split(/\s*[–]\s*|\s*-\s*|,\s*/);
+    start=(parts[0]||'').trim();end=(parts[1]||'').trim();
+    [ start,end ]=[start,end].map(s=>{if(s&&!/^\d{4}-\d{2}-\d{2}$/.test(s)){const d=new Date(s);return isNaN(d)?'':d.toISOString().split('T')[0];}return s;});
+  }
+}
 $('trip-start-input').value=start;$('trip-end-input').value=end;
 $('modal-overlay').classList.remove('hidden');$('trip-name-input').focus();
 }
